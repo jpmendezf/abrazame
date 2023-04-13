@@ -12,7 +12,7 @@ class UpdateLocation extends StatefulWidget {
 }
 
 class _UpdateLocationState extends State<UpdateLocation> {
-  late Map _newAddress;
+  Map? _newAddress;
   @override
   void initState() {
     getLocationCoordinates().then((updateAddress) {
@@ -37,7 +37,7 @@ class _UpdateLocationState extends State<UpdateLocation> {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(_newAddress != null
-              ? _newAddress['PlaceName'] ?? 'Fetching..'.tr().toString()
+              ? _newAddress!['PlaceName'] ?? 'Fetching..'.tr().toString()
               : 'Unable to load...'.tr().toString()),
           leading: Icon(
             Icons.location_searching_rounded,

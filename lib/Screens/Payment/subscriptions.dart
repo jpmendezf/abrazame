@@ -9,8 +9,10 @@ import 'package:hookup4u/models/user_model.dart';
 import 'package:hookup4u/util/color.dart';
 import 'package:hookup4u/util/snackbar.dart';
 //import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Profile/profile.dart';
@@ -331,6 +333,13 @@ class _SubscriptionState extends State<Subscription> {
                                                 });
                                               },
                                               children: products.map((product) {
+                                                var iosP;
+                                                product
+                                                    as GooglePlayProductDetails;
+                                                if (Platform.isIOS) {
+                                                  iosP = product
+                                                      as AppStoreProductDetails;
+                                                }
                                                 return Transform.rotate(
                                                   angle: pi / 2,
                                                   child: Center(
@@ -339,27 +348,23 @@ class _SubscriptionState extends State<Subscription> {
                                                         productList(
                                                           context: context,
                                                           product: product,
-                                                          interval: product
-                                                              .currencySymbol
-                                                          // getIntervalAndroid(
-                                                          //     product)
-                                                          ,
+                                                          interval: Platform
+                                                                  .isIOS
+                                                              ? getInterval(
+                                                                  product)
+                                                              : getIntervalAndroid(
+                                                                  product),
                                                           intervalCount: Platform
                                                                   .isIOS
-                                                              ? product
-                                                                  .currencyCode
+                                                              ? iosP
+                                                                  .skProduct
+                                                                  .subscriptionPeriod!
+                                                                  .numberOfUnits
                                                                   .toString()
-                                                              //  product
-                                                              //     .skProduct!
-                                                              //     .subscriptionPeriod!
-                                                              //     .numberOfUnits
-                                                              //     .toString()
                                                               : product
-                                                                  .currencyCode,
-                                                          // product
-                                                          //     .skuDetail!
-                                                          //     .subscriptionPeriod
-                                                          //     .split("")[1],
+                                                                  .skuDetails
+                                                                  .subscriptionPeriod
+                                                                  .split("")[1],
                                                           price: product.price,
                                                           onTap: () {
                                                             null;
@@ -636,7 +641,7 @@ class _SubscriptionState extends State<Subscription> {
   ) async {
     PurchaseDetails purchase = _hasPurchased(id);
     if (purchase != null && purchase.status == PurchaseStatus.purchased ||
-        purchase.status == PurchaseStatus.purchased) {
+        purchase.status == PurchaseStatus.restored) {
       print('===***${purchase.productID}');
 
       // if (Platform.isIOS) {
@@ -668,21 +673,22 @@ class _SubscriptionState extends State<Subscription> {
     await _iap.buyNonConsumable(purchaseParam: purchaseParam);
   }
 
-  // String getInterval(ProductDetails product) {
-  //   SKSubscriptionPeriodUnit periodUnit =
-  //       product.skProduct!.subscriptionPeriod!.unit;
-  //   if (SKSubscriptionPeriodUnit.month == periodUnit) {
-  //     return "Month(s)";
-  //   } else if (SKSubscriptionPeriodUnit.week == periodUnit) {
-  //     return "Week(s)";
-  //   } else {
-  //     return "Year";
-  //   }
-  // }
+  String getInterval(ProductDetails product) {
+    product as AppStoreProductDetails;
+    SKSubscriptionPeriodUnit periodUnit =
+        product.skProduct.subscriptionPeriod!.unit;
+    if (SKSubscriptionPeriodUnit.month == periodUnit) {
+      return "Month(s)";
+    } else if (SKSubscriptionPeriodUnit.week == periodUnit) {
+      return "Week(s)";
+    } else {
+      return "Year";
+    }
+  }
 
   String getIntervalAndroid(ProductDetails product) {
-    String durCode = product.id.split("_")[1];
-    print('===${product.id}');
+    product as GooglePlayProductDetails;
+    String durCode = product.skuDetails.subscriptionPeriod.split("")[2];
     if (durCode == "M" || durCode == "m") {
       return "Month(s)";
     } else if (durCode == "Y" || durCode == "y") {

@@ -109,9 +109,10 @@ class _ProfileState extends State<Profile> {
                                 height: 150,
                                 width: 150,
                                 fit: BoxFit.fill,
-                                imageUrl: widget.currentUser.imageUrl!.length > 0
-                                    ? widget.currentUser.imageUrl![0] ?? ''
-                                    : '',
+                                imageUrl:
+                                    widget.currentUser.imageUrl!.length > 0
+                                        ? widget.currentUser.imageUrl![0] ?? ''
+                                        : '',
                                 useOldImageOnUrlChange: true,
                                 placeholder: (context, url) =>
                                     CupertinoActivityIndicator(

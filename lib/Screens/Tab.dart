@@ -53,19 +53,14 @@ class TabbarState extends State<Tabbar> {
   @override
   void initState() {
     final Stream<List<PurchaseDetails>> purchaseUpdated = _iap.purchaseStream;
-    print('===purchaseUpdated=====${purchaseUpdated.first}');
     _subscription = purchaseUpdated.listen((purchaseDetailsList) async {
-      print('========${purchaseDetailsList.length}');
-
       setState(() {
         purchases.addAll(purchaseDetailsList);
         _listenToPurchaseUpdated(purchaseDetailsList);
       });
     }, onDone: () {
-      print('===purchaseUpdated=====done');
       _subscription!.cancel();
     }, onError: (error) {
-      print('===purchaseUpdated=====cancel');
       _subscription!.cancel();
     });
 
@@ -73,7 +68,8 @@ class TabbarState extends State<Tabbar> {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? message) {
-      if (message != null) {
+      if (message != null && message.data['type'] == 'Call') {
+        print('=====${message.data}');
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => Incoming(message.data)));
       } else {}
@@ -85,8 +81,8 @@ class TabbarState extends State<Tabbar> {
           context: context,
           type: AlertType.success,
           title: "Confirmation".tr().toString(),
-          desc: "You have successfully subscribed to our"
-              .tr(args: ['${widget.plan}']).toString(),
+          desc: "You have successfully subscribed to our ".tr().toString() +
+              "${widget.plan}",
           buttons: [
             DialogButton(
               child: Text(
@@ -101,9 +97,9 @@ class TabbarState extends State<Tabbar> {
       });
     }
     _getAccessItems();
-    _getCurrentUser();
     _getMatches();
     _getpastPurchases();
+    _getCurrentUser();
   }
 
   @override
@@ -129,31 +125,31 @@ class TabbarState extends State<Tabbar> {
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     purchaseDetailsList.forEach((PurchaseDetails purchaseDetails) async {
-      print('========${purchaseDetails.status}');
-
-      if (purchaseDetails.status == purchaseDetails.status) {
-        print('===in if stmnt  ${purchaseDetails.productID}');
-        await _verifyPuchase(purchaseDetails.productID);
-      }
-      // switch (purchaseDetails.status) {
-      //   case PurchaseStatus.pending:
-      //     //  _showPendingUI();
-      //     break;
-      //   case PurchaseStatus.purchased:
-      //   case purchaseDetails.status
-      //     await _verifyPuchase(purchaseDetails.productID);
-      //     // bool valid = await _verifyPurchase(purchaseDetails);
-      //     // if (!valid) {
-      //     //   _handleInvalidPurchase(purchaseDetails);
-      //     // }
-      //     break;
-      //   case PurchaseStatus.error:
-      //     print(purchaseDetails.error!);
-      //     // _handleError(purchaseDetails.error!);
-      //     break;
-      //   default:
-      //     break;
+      // if (purchaseDetails.status == PurchaseStatus.purchased ||
+      //     purchaseDetails.status == PurchaseStatus.restored) {
+      //   print('===in if stmnt  ${purchaseDetails.productID}');
+      //   await _verifyPuchase(purchaseDetails.productID);
       // }
+      switch (purchaseDetails.status) {
+        case PurchaseStatus.pending:
+          //  _showPendingUI();
+          print('===pending...  ${purchaseDetails.productID}');
+          break;
+        case PurchaseStatus.purchased:
+        case PurchaseStatus.restored:
+          await _verifyPuchase(purchaseDetails.productID);
+          // bool valid = await _verifyPurchase(purchaseDetails);
+          // if (!valid) {
+          //   _handleInvalidPurchase(purchaseDetails);
+          // }
+          break;
+        case PurchaseStatus.error:
+          print(purchaseDetails.error!);
+          // _handleError(purchaseDetails.error!);
+          break;
+        default:
+          break;
+      }
 
       if (purchaseDetails.pendingCompletePurchase) {
         await _iap.completePurchase(purchaseDetails);
@@ -192,10 +188,7 @@ class TabbarState extends State<Tabbar> {
 
   ///verifying pourchase of user
   Future<void> _verifyPuchase(String id) async {
-    print('===**************');
     PurchaseDetails purchase = _hasPurchased(id);
-    print('===******** ${purchase.purchaseID}');
-    print('===******** ${purchase.status}');
     if (purchase != null && purchase.status == PurchaseStatus.purchased ||
         purchase.status == PurchaseStatus.restored) {
       print(purchase.productID);
@@ -551,8 +544,8 @@ class TabbarState extends State<Tabbar> {
                                 child: Profile(currentUser!, isPuchased,
                                     purchases, items)),
                             Center(
-                                child: CardPictures(
-                                    currentUser!, users, swipecount, items)),
+                                child: CardPictures(currentUser!, users,
+                                    isPuchased ? 0 : swipecount, items)),
                             Center(child: Notifications(currentUser!)),
                             Center(
                                 child: HomeScreen(
@@ -590,7 +583,11 @@ class TabbarState extends State<Tabbar> {
   }
 
   Future<void> _getpastPurchases() async {
-    await _iap.restorePurchases();
+    print('===past purchses----');
+    bool isAvailable = await _iap.isAvailable();
+    if (isAvailable) {
+      await _iap.restorePurchases();
+    }
   }
 }
 

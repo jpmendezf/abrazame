@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hookup4u/util/color.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
+
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 class PaymentDetails extends StatelessWidget {
   final List<PurchaseDetails> purchases;
@@ -53,100 +58,96 @@ class PaymentDetails extends StatelessWidget {
                             scrollDirection: Axis.vertical,
                             physics: ScrollPhysics(),
                             shrinkWrap: true,
-                            children: purchases
-                                .map((index) => Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: DataTable(
-                                          columns: [
-                                            DataColumn(
-                                                label: Text(
-                                              "Plan".tr().toString(),
-                                              style: TextStyle(
-                                                //   color: primaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            )),
-                                            DataColumn(
-                                                label: Text(
-                                                    "Details".tr().toString(),
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      // color: primaryColor,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                    ))),
-                                          ],
-                                          rows: [
-                                            DataRow(cells: [
-                                              DataCell(Text("Transaction_id",
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                  ))),
-                                              DataCell(
-                                                  Text("${index.purchaseID}",
-                                                      style: TextStyle(
-                                                        fontSize: 15,
-                                                      ))),
-                                            ]),
-                                            DataRow(cells: [
-                                              DataCell(Text("product_id",
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                  ))),
-                                              DataCell(
-                                                  Text("${index.productID}",
-                                                      style: TextStyle(
-                                                        fontSize: 15,
-                                                        // color: primaryColor,
-                                                      ))),
-                                            ]),
-                                            DataRow(cells: [
-                                              DataCell(Text(
-                                                  "Subscribed on"
-                                                      .tr()
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                  ))),
-                                              DataCell(Text(
-                                                  DateTime.fromMillisecondsSinceEpoch(
-                                                          int.parse(index
-                                                              .transactionDate!))
-                                                      .toLocal()
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    // color: primaryColor,
-                                                  ))),
-                                            ]),
-                                            DataRow(cells: [
-                                              DataCell(
-                                                  Text("Status".tr().toString(),
-                                                      style: TextStyle(
-                                                        fontSize: 15,
-                                                      ))),
-                                              DataCell(Text(
-                                                  index.pendingCompletePurchase
-                                                      ? "Active".tr().toString()
-                                                      : "Cancelled"
-                                                          .tr()
-                                                          .toString(),
-                                                  style: TextStyle(
-                                                    color: index
-                                                            .pendingCompletePurchase
-                                                        ? Colors.green
-                                                        : Colors.red,
-                                                    fontSize: 15,
-                                                  ))),
-                                            ]),
-                                          ],
+                            children: purchases.map((index) {
+                              index as GooglePlayPurchaseDetails;
+                              if (Platform.isIOS) {
+                                index as AppStorePurchaseDetails;
+                              }
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: DataTable(
+                                    columns: [
+                                      DataColumn(
+                                          label: Text(
+                                        "Plan".tr().toString(),
+                                        style: TextStyle(
+                                          //   color: primaryColor,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
                                         ),
-                                      ),
-                                    ))
-                                .toList(),
+                                      )),
+                                      DataColumn(
+                                          label: Text("Details".tr().toString(),
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                // color: primaryColor,
+                                                fontWeight: FontWeight.w400,
+                                              ))),
+                                    ],
+                                    rows: [
+                                      DataRow(cells: [
+                                        DataCell(Text("Transaction_id",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                            ))),
+                                        DataCell(Text("${index.purchaseID}",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                            ))),
+                                      ]),
+                                      DataRow(cells: [
+                                        DataCell(Text("product_id",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                            ))),
+                                        DataCell(Text("${index.productID}",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              // color: primaryColor,
+                                            ))),
+                                      ]),
+                                      DataRow(cells: [
+                                        DataCell(Text(
+                                            "Subscribed on".tr().toString(),
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                            ))),
+                                        DataCell(Text(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                    int.parse(
+                                                        index.transactionDate!))
+                                                .toLocal()
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              // color: primaryColor,
+                                            ))),
+                                      ]),
+                                      DataRow(cells: [
+                                        DataCell(Text("Status".tr().toString(),
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                            ))),
+                                        DataCell(Text(
+                                            index.billingClientPurchase
+                                                    .isAutoRenewing
+                                                ? "Active".tr().toString()
+                                                : "Cancelled".tr().toString(),
+                                            style: TextStyle(
+                                              color: index.billingClientPurchase
+                                                      .isAutoRenewing
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                              fontSize: 15,
+                                            ))),
+                                      ]),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           )
                         : Center(
                             child: CircularProgressIndicator(),
