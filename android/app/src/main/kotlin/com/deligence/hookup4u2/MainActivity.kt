@@ -1,4 +1,4 @@
-package com.deligence.hookup4u
+package com.huggingcr.app
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

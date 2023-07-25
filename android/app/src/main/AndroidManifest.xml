@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.deligenceTech.hookup4u">
+    package="com.huggingcr.app">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -10,7 +10,7 @@
 
 
         android:name="${applicationName}"
-        android:label="hookup4u"
+        android:label="Huggingcr"
         android:icon="@mipmap/launcher_icon">
         <meta-data android:name="com.facebook.sdk.ApplicationId"
 

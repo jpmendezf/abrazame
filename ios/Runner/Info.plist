@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>hookup4u</string>
+	<string>Huggingcr</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -37,7 +37,7 @@
 	<key>FacebookAppID</key>
 	<string>000000000000</string>
 	<key>FacebookDisplayName</key>
-	<string>Hookup4u</string>
+	<string>Huggingcr</string>
 	<key>LSApplicationCategoryType</key>
 	<string>The iOS Simulator deployment target &apos;IPHONEOS_DEPLOYMENT_TARGET&apos; is set to 7.0, but the range of supported deployment target versions is 8.0 to 13.2.99.</string>
 	<key>LSRequiresIPhoneOS</key>

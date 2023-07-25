@@ -1,4 +1,4 @@
-name: hookup4u
+name: Huggingcr
 description: A new Flutter application.
 
 # The following defines the version and build number for your application.
@@ -14,13 +14,13 @@ description: A new Flutter application.
 version: 1.0.4+4
 
 environment:
-  sdk: ">=2.18.0 <3.0.0"
+  sdk: ">=2.19.6 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  country_code_picker: ^2.0.2
-  flutter_facebook_auth: ^5.0.6
+  country_code_picker: ^3.0.0
+  flutter_facebook_auth: ^5.0.8
   pin_code_fields: ^7.4.0
   #swipe_stack: 1.0.0
   #flutter_swiper: 1.1.6
@@ -30,38 +30,38 @@ dependencies:
   #swipable_stack: ^0.5.0
 
   intl: ^0.17.0
-  firebase_auth: ^4.2.1
-  cloud_firestore: ^4.2.0
+  firebase_auth: ^4.4.1
+  cloud_firestore: ^4.5.1
   # geolocator: ^6.1.13
   location: ^4.4.0
-  image_picker: ^0.8.6
-  image_cropper: ^3.0.1
-  firebase_storage: ^11.0.8
-  path_provider: ^2.0.11
+  image_picker: ^0.8.7+2
+  image_cropper: ^3.0.2
+  firebase_storage: ^11.1.0
+  path_provider: ^2.0.14
   cached_network_image: ^3.2.3
   share: ^2.0.4
-  firebase_messaging: ^14.1.4
+  firebase_messaging: ^14.4.0
   flutter_webview_plugin: ^0.4.0
-  in_app_purchase: ^2.0.0
+  in_app_purchase: ^3.1.5
   rflutter_alert: ^2.0.4
   agora_rtc_engine: ^5.1.0
   permission_handler: ^10.2.0
   flutter_ringtone_player: ^3.2.0
   shimmer: ^2.0.0
   #apple_sign_in: ^0.1.0
-  url_launcher: ^6.1.7
+  url_launcher: ^6.1.10
   flutter_mapbox_autocomplete:  ^2.0.0
   # firebase_admob: ^0.11.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
   easy_localization: ^3.0.1
-  firebase_core: ^2.4.0
-  google_mobile_ads: ^2.3.0
+  firebase_core: ^2.9.0
+  google_mobile_ads: ^2.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.0
+  flutter_launcher_icons: ^0.13.0
   
 flutter_icons:
   android: "launcher_icon" 

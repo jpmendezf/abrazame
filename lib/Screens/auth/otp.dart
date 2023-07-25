@@ -380,9 +380,9 @@ Future setDataUser(User user) async {
     'userId': user.uid,
     'phoneNumber': user.phoneNumber,
     'timestamp': FieldValue.serverTimestamp(),
-    'Pictures': FieldValue.arrayUnion([
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxUC64VZctJ0un9UBnbUKtj-blhw02PeDEQIMOqovc215LWYKu&s"
-    ])
+    // 'Pictures': FieldValue.arrayUnion([
+    //   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxUC64VZctJ0un9UBnbUKtj-blhw02PeDEQIMOqovc215LWYKu&s"
+    // ])
 
     // 'name': user.displayName,
     // 'pictureUrl': user.photoUrl,
